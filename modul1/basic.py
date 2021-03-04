@@ -12,6 +12,50 @@ import numpy as np
 uiFile = os.path.join(os.path.dirname(__file__), 'basic.ui')
 
 
+def doPxOperation(inQImage, pxOperation):
+    if not inQImage:
+        return None
+
+    w, h = inQImage.width(), inQImage.height()
+    res = QImage(w, h, QImage.Format_RGB32)
+    for i in range(h):
+        for j in range(w):
+            px = QColor(inQImage.pixel(j, i))
+            pxNew = pxOperation(px)
+            res.setPixel(j, i, pxNew.rgb())
+    return res
+
+
+def pxOnlyRed(src):
+    px = src.red()
+    return QColor(px, px, px)
+
+
+def pxOnlyGreen(src):
+    px = src.green()
+    return QColor(px, px, px)
+
+
+def pxOnlyBlue(src):
+    px = src.blue()
+    return QColor(px, px, px)
+
+
+def pxOnlyCyan(src):
+    px = src.cyan()
+    return QColor(px, px, px)
+
+
+def pxOnlyMagenta(src):
+    px = src.magenta()
+    return QColor(px, px, px)
+
+
+def pxOnlyYellow(src):
+    px = src.yellow()
+    return QColor(px, px, px)
+
+
 class Ui(QtWidgets.QMainWindow):
     def __init__(self):
         super(Ui, self).__init__()
@@ -46,76 +90,34 @@ class Ui(QtWidgets.QMainWindow):
                        'radioY').clicked.connect(self.radioYClicked)
 
     def radioRClicked(self):
-        if not self.copiedQimg:
-            return
-        w, h = self.copiedQimg.width(), self.copiedQimg.height()
-        res = QImage(w, h, QImage.Format_RGB32)
-        for i in range(h):
-            for j in range(w):
-                px = QColor(self.copiedQimg.pixel(j, i)).red()
-                pxNew = QColor(px, px, px)
-                res.setPixel(j, i, pxNew.rgb())
-        self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+        res = doPxOperation(self.copiedQimg, pxOnlyRed)
+        if res:
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
 
     def radioGClicked(self):
-        if not self.copiedQimg:
-            return
-        w, h = self.copiedQimg.width(), self.copiedQimg.height()
-        res = QImage(w, h, QImage.Format_RGB32)
-        for i in range(h):
-            for j in range(w):
-                px = QColor(self.copiedQimg.pixel(j, i)).green()
-                pxNew = QColor(px, px, px)
-                res.setPixel(j, i, pxNew.rgb())
-        self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+        res = doPxOperation(self.copiedQimg, pxOnlyGreen)
+        if res:
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
 
     def radioBClicked(self):
-        if not self.copiedQimg:
-            return
-        w, h = self.copiedQimg.width(), self.copiedQimg.height()
-        res = QImage(w, h, QImage.Format_RGB32)
-        for i in range(h):
-            for j in range(w):
-                px = QColor(self.copiedQimg.pixel(j, i)).blue()
-                pxNew = QColor(px, px, px)
-                res.setPixel(j, i, pxNew.rgb())
-        self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+        res = doPxOperation(self.copiedQimg, pxOnlyBlue)
+        if res:
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
 
     def radioCClicked(self):
-        if not self.copiedQimg:
-            return
-        w, h = self.copiedQimg.width(), self.copiedQimg.height()
-        res = QImage(w, h, QImage.Format_RGB32)
-        for i in range(h):
-            for j in range(w):
-                px = QColor(self.copiedQimg.pixel(j, i)).cyan()
-                pxNew = QColor(px, px, px)
-                res.setPixel(j, i, pxNew.rgb())
-        self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+        res = doPxOperation(self.copiedQimg, pxOnlyCyan)
+        if res:
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
 
     def radioMClicked(self):
-        if not self.copiedQimg:
-            return
-        w, h = self.copiedQimg.width(), self.copiedQimg.height()
-        res = QImage(w, h, QImage.Format_RGB32)
-        for i in range(h):
-            for j in range(w):
-                px = QColor(self.copiedQimg.pixel(j, i)).magenta()
-                pxNew = QColor(px, px, px)
-                res.setPixel(j, i, pxNew.rgb())
-        self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+        res = doPxOperation(self.copiedQimg, pxOnlyMagenta)
+        if res:
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
 
     def radioYClicked(self):
-        if not self.copiedQimg:
-            return
-        w, h = self.copiedQimg.width(), self.copiedQimg.height()
-        res = QImage(w, h, QImage.Format_RGB32)
-        for i in range(h):
-            for j in range(w):
-                px = QColor(self.copiedQimg.pixel(j, i)).yellow()
-                pxNew = QColor(px, px, px)
-                res.setPixel(j, i, pxNew.rgb())
-        self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+        res = doPxOperation(self.copiedQimg, pxOnlyYellow)
+        if res:
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
 
     def btnOpenClicked(self):
         options = QFileDialog.Options()
