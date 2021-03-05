@@ -4,12 +4,16 @@ from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import QSize
 import sys
 import os
-
-from PIL import Image, ImageQt
-import cv2  # Dipakai untuk load gambar saja
-import numpy as np
+import math
 
 uiFile = os.path.join(os.path.dirname(__file__), 'basic.ui')
+
+
+def remap(v, min, max, newMin, newMax):
+    OldRange = (max - min)
+    NewRange = (newMax - newMin)
+    NewValue = (((v - min) * NewRange) / OldRange) + newMin
+    return NewValue
 
 
 def doPxOperation(inQImage, pxOperation):
@@ -26,34 +30,98 @@ def doPxOperation(inQImage, pxOperation):
     return res
 
 
+def rgb2K(r, g, b):
+    rMap = remap(r, 0, 255, 0, 1)
+    gMap = remap(g, 0, 255, 0, 1)
+    bMap = remap(b, 0, 255, 0, 1)
+    return (1 - max(rMap, gMap, bMap))
+
+
+def rgb2CMY(r, g, b):
+    # px = (1-0.686275-0.098039)/(1-0.098039) = 0.23913
+    K = rgb2K(r, g, b)
+    # print(K)
+    rMap = remap(r, 0, 255, 0.0, 1)
+    gMap = remap(g, 0, 255, 0.0, 1)
+    bMap = remap(b, 0, 255, 0.0, 1)
+    if K == 1:
+        cMap = 0
+        mMap = 0
+        yMap = 0
+    else:
+        cMap = (1 - rMap - K)/(1 - K)
+        mMap = (1 - gMap - K)/(1 - K)
+        yMap = (1 - bMap - K)/(1 - K)
+
+    c = remap(cMap, 0, 1, 0, 255)
+    m = remap(mMap, 0, 1, 0, 255)
+    y = remap(yMap, 0, 1, 0, 255)
+    return c, m, y
+
+
+def cmy2RGB(c, m, y, k):
+    # R = 255 × (1-C) × (1-K)
+    # G = 255 × (1-M) × (1-K)
+    # B = 255 × (1-Y) × (1-K)
+    # px = (1-0.686275-0.098039)/(1-0.098039) = 0.23913
+    cMap = remap(c, 0, 255, 0.0, 1)
+    mMap = remap(m, 0, 255, 0.0, 1)
+    yMap = remap(y, 0, 255, 0.0, 1)
+    kMap = remap(k, 0, 255, 0.0, 1)
+    if k == 1:
+        rMap = 0
+        gMap = 0
+        bMap = 0
+    else:
+        rMap = (1 - cMap)/(1 - kMap)
+        gMap = (1 - mMap)/(1 - kMap)
+        bMap = (1 - yMap)/(1 - kMap)
+
+    r = remap(rMap, 0, 1, 0, 255)
+    g = remap(gMap, 0, 1, 0, 255)
+    b = remap(bMap, 0, 1, 0, 255)
+    return r, g, b
+
+
 def pxOnlyRed(src):
     px = src.red()
-    return QColor(px, px, px)
+    return QColor(px, 0, 0)
 
 
 def pxOnlyGreen(src):
     px = src.green()
-    return QColor(px, px, px)
+    return QColor(0, px, 0)
 
 
 def pxOnlyBlue(src):
     px = src.blue()
-    return QColor(px, px, px)
+    return QColor(0, 0, px)
 
 
 def pxOnlyCyan(src):
-    px = src.cyan()
-    return QColor(px, px, px)
+    K = rgb2K(src.red(), src.green(), src.blue())
+    c, m, y = rgb2CMY(src.red(), src.green(), src.blue())
+    # print(c)
+    # Representasikan channel c nya saja
+    r, g, b = cmy2RGB(c, 0, 0, K)
+    print((r, g, b))
+    return QColor(r, g, b)
 
 
 def pxOnlyMagenta(src):
-    px = src.magenta()
-    return QColor(px, px, px)
+    K = rgb2K(src.red(), src.green(), src.blue())
+    c, m, y = rgb2CMY(src.red(), src.green(), src.blue())
+    # Representasikan channel c nya saja
+    r, g, b = cmy2RGB(0, m, 0, K)
+    return QColor(r, g, b)
 
 
 def pxOnlyYellow(src):
-    px = src.yellow()
-    return QColor(px, px, px)
+    K = rgb2K(src.red(), src.green(), src.blue())
+    c, m, y = rgb2CMY(src.red(), src.green(), src.blue())
+    # Representasikan channel c nya saja
+    r, g, b = cmy2RGB(0, 0, y, K)
+    return QColor(r, g, b)
 
 
 class Ui(QtWidgets.QMainWindow):
@@ -101,6 +169,7 @@ class Ui(QtWidgets.QMainWindow):
 
     def radioBClicked(self):
         res = doPxOperation(self.copiedQimg, pxOnlyBlue)
+        res.pixelColor(3, 3).cyan()
         if res:
             self.imgProcessed.setPixmap(QPixmap.fromImage(res))
 
