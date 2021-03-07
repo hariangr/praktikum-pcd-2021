@@ -104,7 +104,7 @@ def pxOnlyCyan(src):
     # print(c)
     # Representasikan channel c nya saja
     r, g, b = cmy2RGB(c, 0, 0, K)
-    print((r, g, b))
+    # print((r, g, b))
     return QColor(r, g, b)
 
 
