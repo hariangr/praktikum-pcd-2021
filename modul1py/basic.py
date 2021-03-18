@@ -192,7 +192,7 @@ class Ui(QtWidgets.QMainWindow):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(
-            self, "QFileDialog.getOpenFileName()", "", "All Files (*);;Python Files (*.py)", options=options)
+            self, "QFileDialog.getOpenFileName()", "", "All Files (*);;Jpeg (*.jpeg);;BMP (*.bmp)", options=options)
         if not fileName:
             return
         # self.srcQimg = QImage(fileName=fileName, format=QImage.Format_RGB32)
@@ -216,6 +216,7 @@ class Ui(QtWidgets.QMainWindow):
             for j in range(srcW):
                 srcPx = QColor(self.srcQimg.pixel(j, i))
                 self.copiedQimg.setPixel(j, i, srcPx.rgb())
+                print(f"x {j}; y {i}: \t r {srcPx.red()}; g {srcPx.green()}; b {srcPx.blue()}")
 
         self.imgCopied.setPixmap(QPixmap.fromImage(self.copiedQimg))
 

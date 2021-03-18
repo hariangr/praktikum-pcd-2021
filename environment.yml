@@ -1,0 +1,30 @@
+name: quick-ml
+channels:
+  - defaults
+dependencies:
+  - ca-certificates=2021.1.19=hecd8cb5_1
+  - certifi=2020.12.5=py37hecd8cb5_0
+  - libcxx=10.0.0=1
+  - libffi=3.3=hb1e8313_2
+  - ncurses=6.2=h0a44026_1
+  - openssl=1.1.1j=h9ed2024_0
+  - pip=21.0.1=py37hecd8cb5_0
+  - python=3.7.10=h88f2d9e_0
+  - readline=8.1=h9ed2024_0
+  - setuptools=52.0.0=py37hecd8cb5_0
+  - sqlite=3.35.1=hce871da_0
+  - tk=8.6.10=hb0a8c7a_0
+  - wheel=0.36.2=pyhd3eb1b0_0
+  - xz=5.2.5=h1de35cc_0
+  - zlib=1.2.11=h1de35cc_3
+  - pip:
+    - autopep8==1.5.5
+    - numpy==1.20.1
+    - opencv-python==4.5.1.48
+    - pillow==8.1.1
+    - pycodestyle==2.6.0
+    - pyqt5==5.15.3
+    - pyqt5-qt==5.15.2
+    - pyqt5-sip==12.8.1
+    - toml==0.10.2
+prefix: /Users/hariangr/opt/anaconda3/envs/quick-ml
