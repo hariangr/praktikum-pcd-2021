@@ -160,37 +160,37 @@ class Ui(QtWidgets.QMainWindow):
     def radioRClicked(self):
         res = doPxOperation(self.copiedQimg, pxOnlyRed)
         if res:
-            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res).scaledToWidth(self.imgProcessed.size().width()))
 
     def radioGClicked(self):
         res = doPxOperation(self.copiedQimg, pxOnlyGreen)
         if res:
-            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res).scaledToWidth(self.imgProcessed.size().width()))
 
     def radioBClicked(self):
         res = doPxOperation(self.copiedQimg, pxOnlyBlue)
         res.pixelColor(3, 3).cyan()
         if res:
-            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res).scaledToWidth(self.imgProcessed.size().width()))
 
     def radioCClicked(self):
         res = doPxOperation(self.copiedQimg, pxOnlyCyan)
         if res:
-            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res).scaledToWidth(self.imgProcessed.size().width()))
 
     def radioMClicked(self):
         res = doPxOperation(self.copiedQimg, pxOnlyMagenta)
         if res:
-            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res).scaledToWidth(self.imgProcessed.size().width()))
 
     def radioYClicked(self):
         res = doPxOperation(self.copiedQimg, pxOnlyYellow)
         if res:
-            self.imgProcessed.setPixmap(QPixmap.fromImage(res))
+            self.imgProcessed.setPixmap(QPixmap.fromImage(res).scaledToWidth(self.imgProcessed.size().width()))
 
     def btnOpenClicked(self):
         options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
+        # options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(
             self, "QFileDialog.getOpenFileName()", "", "All Files (*);;Jpeg (*.jpeg);;BMP (*.bmp)", options=options)
         if not fileName:
@@ -198,7 +198,7 @@ class Ui(QtWidgets.QMainWindow):
         # self.srcQimg = QImage(fileName=fileName, format=QImage.Format_RGB32)
         with open(fileName, 'rb') as f:
             self.srcQimg = QImage.fromData(f.read())
-            self.imgSrc.setPixmap(QPixmap.fromImage(self.srcQimg))
+            self.imgSrc.setPixmap(QPixmap.fromImage(self.srcQimg).scaledToWidth(self.imgSrc.size().width()))
 
     def btnExitClicked(self):
         self.close()
@@ -218,7 +218,7 @@ class Ui(QtWidgets.QMainWindow):
                 self.copiedQimg.setPixel(j, i, srcPx.rgb())
                 print(f"x {j}; y {i}: \t r {srcPx.red()}; g {srcPx.green()}; b {srcPx.blue()}")
 
-        self.imgCopied.setPixmap(QPixmap.fromImage(self.copiedQimg))
+        self.imgCopied.setPixmap(QPixmap.fromImage(self.copiedQimg).scaledToWidth(self.imgCopied.size().width()))
 
 
 app = QtWidgets.QApplication(sys.argv)
