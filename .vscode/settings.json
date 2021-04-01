@@ -3,5 +3,6 @@
         "activityBar.background": "#4D1058",
         "titleBar.activeBackground": "#6C177C",
         "titleBar.activeForeground": "#FEFCFE"
-    }
+    },
+    "python.pythonPath": "/Users/hariangr/opt/anaconda3/envs/quick-ml/bin/python"
 }
