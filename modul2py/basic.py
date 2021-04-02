@@ -45,6 +45,7 @@ def pxToBinerHOF(thres):
 
     return _higherOrderFunction
 
+
 def pxAddBrighness(c):
     def _higherOrderFunction(src):
         v = src.red()  # Input adalah gambar gs, ketiga channel sama
@@ -72,10 +73,13 @@ class Ui(QtWidgets.QMainWindow):
             self.btnGsClicked)
         self.findChild(QtWidgets.QPushButton, 'btnBiner').clicked.connect(
             self.btnBinerClicked)
-        self.findChild(QtWidgets.QPushButton, 'btnBg').clicked.connect(
-            self.btnBgClicked)
+        self.lblBg = self.findChild(QtWidgets.QLabel, 'lblBg')
+
         # self.findChild(QtWidgets.QPushButton, 'btnBg').clicked.connect(
-        #     self.btnCopyClicked)
+        #     self.btnBgClicked)
+        self.sliderBg = self.findChild(QtWidgets.QSlider, 'sliderBrighness')
+        self.sliderBg.valueChanged.connect(self.onBgSlideChanged)
+
         # self.findChild(QtWidgets.QPushButton, 'btnBiner').clicked.connect(
         #     self.btnCopyClicked)
 
@@ -106,12 +110,24 @@ class Ui(QtWidgets.QMainWindow):
             self.imgGs.setPixmap(QPixmap.fromImage(
                 res).scaledToWidth(self.imgGs.size().width()))
 
-    def btnBgClicked(self):
-        _c, ok = QInputDialog.getInt(self, 'Offset Brighness',
-                                         'Masukkan nilai offset (-255 -> 255)?', min=-255, max=255, step=1)
+    # def btnBgClicked(self):
+    #     _c, ok = QInputDialog.getInt(self, 'Offset Brighness',
+    #                                  'Masukkan nilai offset (-255 -> 255)?', min=-255, max=255, step=1)
 
-        if not ok:
-            return
+    #     if not ok:
+    #         return
+
+    #     _operation = pxAddBrighness(_c)
+
+    #     res = doPxOperation(self.gsQimg, _operation)
+    #     if res:
+    #         self.imgBiner.setPixmap(QPixmap.fromImage(
+    #             res).scaledToWidth(self.imgBiner.size().width()))
+
+    def onBgSlideChanged(self):
+        _c = self.sliderBg.value()
+        print("Entah: ", _c)
+        self.lblBg.setText(f"Brighness ({_c}):")
 
         _operation = pxAddBrighness(_c)
 
@@ -119,6 +135,7 @@ class Ui(QtWidgets.QMainWindow):
         if res:
             self.imgBiner.setPixmap(QPixmap.fromImage(
                 res).scaledToWidth(self.imgBiner.size().width()))
+        
 
     def btnBinerClicked(self):
         _thres, ok = QInputDialog.getInt(self, 'Threshold Biner',
